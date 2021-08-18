@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShopppingCart.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,6 @@ namespace ShopppingCart.Data
         {
         }
 
-
+        public DbSet<Page> Pages { get; set; }
     }
 }
