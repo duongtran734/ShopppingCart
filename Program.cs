@@ -18,6 +18,7 @@ namespace ShopppingCart
         {
             var host = CreateHostBuilder(args).Build();
 
+            //Seed Data
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;

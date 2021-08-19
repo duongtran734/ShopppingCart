@@ -56,6 +56,11 @@ namespace ShopppingCart
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    //example :admin/Pages/index
+                    pattern: "{area:exists}/{controller=Pages}/{action=Index}/{id?}");
             });
         }
     }
