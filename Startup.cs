@@ -54,13 +54,16 @@ namespace ShopppingCart
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=Pages}/{action=Index}/{id?}"
+                );
+            });
 
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapControllerRoute(
-                    name: "areas",
-                    //example :admin/Pages/index
-                    pattern: "{area:exists}/{controller=Pages}/{action=Index}/{id?}");
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");  
             });
         }
     }

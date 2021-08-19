@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ShopppingCart.Models.Page>
+﻿@model IEnumerable<Page>
 
 @{
     ViewData["Title"] = "Index";
@@ -43,7 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Sorting)
             </td>
             <td>
-                <a href="#">Edit</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>

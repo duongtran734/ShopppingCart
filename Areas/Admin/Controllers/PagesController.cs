@@ -19,14 +19,26 @@ namespace ShopppingCart.Areas.Admin.Controllers
             this._context = context;
         }
 
+        //GET /admin/pages/[index]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             var pages = _context.Pages.OrderBy(p => p.Sorting);
             List<Page> pagelist = await pages.AsNoTracking().ToListAsync();
-
-
             return View(pagelist);
+        }
+
+        //GET /admin/pages/details/5
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            //get a specific page
+            Page page = await _context.Pages.FirstOrDefaultAsync(p => p.Id == id);
+            if(page == null)
+            {
+                return NotFound();
+            }
+            return View(page);
         }
     }
 }
