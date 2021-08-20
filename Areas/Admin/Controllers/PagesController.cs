@@ -62,6 +62,7 @@ namespace ShopppingCart.Areas.Admin.Controllers
                 var slug = await _context.Pages.FirstOrDefaultAsync(p=>p.Slug == page.Slug);
                 if(slug != null)
                 {
+                    //this error will be displayed in asp-validation-summary
                     ModelState.AddModelError("","The title already exsits.");
                     return View(page);
                 }
@@ -69,6 +70,9 @@ namespace ShopppingCart.Areas.Admin.Controllers
                 _context.Add(page);
                 await _context.SaveChangesAsync();
 
+                // since its Redirect, we have to use TempData
+                //Notification message when successfully added, this is used with partial view
+                TempData["Success"] = "The page has been added! ";
                 return RedirectToAction("index");
             }
 
