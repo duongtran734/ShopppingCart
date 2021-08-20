@@ -40,5 +40,39 @@ namespace ShopppingCart.Areas.Admin.Controllers
             }
             return View(page);
         }
+
+        //GET /admin/pages/ccreate
+        [HttpGet]
+        public IActionResult Create()
+        {
+     
+            return View();
+        }
+
+        //POST /admin/pages/ccreate
+        [HttpPost]
+        public async Task<IActionResult> Create(Page page)
+        {
+            if (ModelState.IsValid)
+            {
+                page.Slug = page.Title.ToLower().Replace(" ", "-");
+                page.Sorting = 100;
+
+                //check if slug is existed
+                var slug = await _context.Pages.FirstOrDefaultAsync(p=>p.Slug == page.Slug);
+                if(slug != null)
+                {
+                    ModelState.AddModelError("","The title already exsits.");
+                    return View(page);
+                }
+                //if not add to DB
+                _context.Add(page);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("index");
+            }
+
+            return View(page);
+        }
     }
 }
