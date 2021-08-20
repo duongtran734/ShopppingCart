@@ -34,7 +34,7 @@ namespace ShopppingCart.Areas.Admin.Controllers
         {
             //get a specific page
             Page page = await _context.Pages.FirstOrDefaultAsync(p => p.Id == id);
-            if(page == null)
+            if (page == null)
             {
                 return NotFound();
             }
@@ -45,12 +45,13 @@ namespace ShopppingCart.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-     
+
             return View();
         }
 
-        //POST /admin/pages/ccreate
+        //POST /admin/pages/create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Page page)
         {
             if (ModelState.IsValid)
@@ -59,11 +60,11 @@ namespace ShopppingCart.Areas.Admin.Controllers
                 page.Sorting = 100;
 
                 //check if slug is existed
-                var slug = await _context.Pages.FirstOrDefaultAsync(p=>p.Slug == page.Slug);
-                if(slug != null)
+                var slug = await _context.Pages.FirstOrDefaultAsync(p => p.Slug == page.Slug);
+                if (slug != null)
                 {
                     //this error will be displayed in asp-validation-summary
-                    ModelState.AddModelError("","The title already exsits.");
+                    ModelState.AddModelError("", "The title already exsits.");
                     return View(page);
                 }
                 //if not add to DB
@@ -78,5 +79,55 @@ namespace ShopppingCart.Areas.Admin.Controllers
 
             return View(page);
         }
+
+        //GET /admin/pages/edit/5
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            //get a specific page
+            // can use FindAsync instead of FirstOrDefaultAsync
+            Page page = await _context.Pages.FirstOrDefaultAsync(p => p.Id == id);
+            if (page == null)
+            {
+                return NotFound();
+            }
+            return View(page);
+        }
+
+        //POST /admin/pages/edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Page page)
+        {
+            if (ModelState.IsValid)
+            {
+                page.Slug = page.Id == 1? "home" : page.Title.ToLower().Replace(" ", "-");
+                page.Sorting = 100;
+
+                //check if slug is existed
+                var slug = await _context.Pages
+                    .Where(x=>x.Id != page.Id) // this will make sure to check others slug thats not the one we are editing
+                    .FirstOrDefaultAsync(p => p.Slug == page.Slug);
+                if (slug != null)
+                {
+                    //this error will be displayed in asp-validation-summary
+                    ModelState.AddModelError("", "The page already exsits.");
+                    return View(page);
+                }
+                //if not add to DB
+                _context.Update(page);
+                await _context.SaveChangesAsync();
+
+                // since its Redirect, we have to use TempData
+                //Notification message when successfully added, this is used with partial view
+                TempData["Success"] = "The page has been edited! ";
+
+                //redirection the edit page with id parameter
+                return RedirectToAction("Edit", new { id = page.Id});
+            }
+
+            return View(page);
+        }
     }
+
 }
