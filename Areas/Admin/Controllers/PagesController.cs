@@ -101,12 +101,12 @@ namespace ShopppingCart.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                page.Slug = page.Id == 1? "home" : page.Title.ToLower().Replace(" ", "-");
+                page.Slug = page.Id == 1 ? "home" : page.Title.ToLower().Replace(" ", "-");
                 page.Sorting = 100;
 
                 //check if slug is existed
                 var slug = await _context.Pages
-                    .Where(x=>x.Id != page.Id) // this will make sure to check others slug thats not the one we are editing
+                    .Where(x => x.Id != page.Id) // this will make sure to check others slug thats not the one we are editing
                     .FirstOrDefaultAsync(p => p.Slug == page.Slug);
                 if (slug != null)
                 {
@@ -123,11 +123,33 @@ namespace ShopppingCart.Areas.Admin.Controllers
                 TempData["Success"] = "The page has been edited! ";
 
                 //redirection the edit page with id parameter
-                return RedirectToAction("Edit", new { id = page.Id});
+                return RedirectToAction("Edit", new { id = page.Id });
             }
 
             return View(page);
         }
+
+        //GET /admin/pages/delete/5
+        public async Task<IActionResult> Delete(int id)
+        {
+            //get a specific page
+            // can use FindAsync instead of FirstOrDefaultAsync
+            Page page = await _context.Pages.FirstOrDefaultAsync(p => p.Id == id);
+            if (page == null)
+            {
+                TempData["Error"] = "The page does not exist!";
+                return NotFound();
+            }
+            else
+            {
+                _context.Pages.Remove(page);
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = "The page has been deleted!";
+            }
+            return RedirectToAction("Index");
+        }
+
     }
 
 }

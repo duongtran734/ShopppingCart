@@ -3,7 +3,9 @@
 @{
     ViewData["Title"] = "Index";
 }
-<partial name="_SuccessNotificationPartial" />
+<div>
+    <partial name="_SuccessNotificationPartial" />
+</div>
 
 <h1>Index</h1>
 
@@ -46,11 +48,11 @@
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                     @if (item.Title != "Home")
                     {
-                            <span style="color:black;">|</span>
-                            <a asp-action="Delete" asp-route-id="@item.Id"> Delete</a>
+                        <span style="color:black;">|</span>
+                        <a class="confirmDeletion" asp-action="Delete" asp-route-id="@item.Id"> Delete</a>
 
                     }
                 </td>
@@ -58,3 +60,8 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_PagesIndexView");}
+}
+
