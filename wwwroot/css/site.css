@@ -75,3 +75,7 @@ body {
 table.sorting tr:not(.home):not(.page_home) {
     cursor: pointer;
 }
+
+a.nav-link:hover{
+    opacity: 0.3 !important;
+}
