@@ -13,9 +13,9 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table sorting " id="Categories">
     <thead>
-        <tr>
+        <tr class="home">
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -29,7 +29,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
+        <tr id="id_@item.Id" class="@item.Slug">
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -49,5 +49,21 @@
 @section Scripts {
 
     @{await Html.RenderPartialAsync("_PagesIndexView");}
+
+    <!--For sorting-->
+    <script>
+            $("table#Categories tbody").sortable({
+                placeholder: "sortable-placeholder",
+                update: function (event, ui) {
+                    let ids = $("table#Categories tbody").sortable("serialize"); //serialize the data to post with jquery.post
+                    let url = "/admin/categories/reorder";
+
+                    console.log(ids);
+                    //make an ajax jquery.post request so that we can update the order to the database
+
+                    $.post(url, ids);
+                }
+            });
+    </script>
 }
 

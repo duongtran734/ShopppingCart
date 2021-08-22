@@ -104,7 +104,7 @@ namespace ShopppingCart.Areas.Admin.Controllers
             return View(category);
         }
 
-        //GET /admin/pages/delete/5
+        //GET /admin/categories/delete/5
         //We can also use POST request for delete, which is what the scaffold code does
         [HttpGet] 
         public async Task<IActionResult> Delete(int id)
@@ -126,5 +126,25 @@ namespace ShopppingCart.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+
+        //POST /admin/categories/reorder
+        [HttpPost]
+        public async Task<IActionResult> Reorder(int[] id)
+        {
+            //NOTICE: the param name cant be same as the posting data name (ids(post) and id(param))
+            // id[] will arrive in the order it was sorted
+            int count = 1;
+
+            foreach (var categoryId in id)
+            {
+                Category category = await _context.Categories.FindAsync(categoryId);
+                category.Sorting = count;
+                _context.Update(category);
+                await _context.SaveChangesAsync();
+                count++;
+            }
+
+            return Ok();
+        }
     }
 }
