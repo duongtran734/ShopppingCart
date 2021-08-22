@@ -23,6 +23,7 @@ namespace ShopppingCart.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            // OrderBy keep the data sorted in view
             var pages = _context.Pages.OrderBy(p => p.Sorting);
             List<Page> pagelist = await pages.AsNoTracking().ToListAsync();
             return View(pagelist);
@@ -148,6 +149,26 @@ namespace ShopppingCart.Areas.Admin.Controllers
                 TempData["Success"] = "The page has been deleted!";
             }
             return RedirectToAction("Index");
+        }
+
+        //POST /admin/pages/reorder
+        [HttpPost]
+        public async Task<IActionResult> Reorder(int[] id)
+        {
+            //NOTICE: the param name cant be same as the posting data name (ids(post) and id(param))
+            // id[] will arrive in the order it was sorted
+            int count = 1;
+         
+            foreach(var pageId in id)
+            {
+                Page page = await _context.Pages.FindAsync(pageId);
+                page.Sorting = count;
+                _context.Update(page);
+                await _context.SaveChangesAsync();
+                count++;
+            }
+
+            return Ok();
         }
 
     }

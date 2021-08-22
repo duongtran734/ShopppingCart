@@ -12,20 +12,14 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table sorting" id="pages">
     <thead>
-        <tr>
+        <tr class="page_home">
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Slug)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sorting)
             </th>
             <th></th>
         </tr>
@@ -33,18 +27,12 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr id="id_@item.Id" class="@item.Slug">
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Slug)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Sorting)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -63,5 +51,21 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_PagesIndexView");}
+
+    <script>
+        $("table#pages tbody").sortable({
+            items: "tr:not(.home)",
+            placeholder: "sortable-placeholder",
+            update: function (event, ui) {
+                let ids = $("table#pages tbody").sortable("serialize"); //serialize the data to post with jquery.post
+                let url = "/admin/pages/reorder";
+
+                console.log(ids);
+                //make an ajax jquery.post request so that we can update the order to the database
+ 
+                $.post(url, ids);
+            }
+        });
+    </script>
 }
 

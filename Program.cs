@@ -28,7 +28,8 @@ namespace ShopppingCart
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    Console.WriteLine(ex);
+                    throw;
                 }
             }
 
